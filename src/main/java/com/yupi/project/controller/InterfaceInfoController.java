@@ -1,13 +1,16 @@
 package com.yupi.project.controller;
 
+import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.google.gson.Gson;
 import com.sdk.client.JunClient;
 import com.yupi.project.annotation.AuthCheck;
 import com.yupi.project.common.*;
 import com.yupi.project.constant.CommonConstant;
 import com.yupi.project.exception.BusinessException;
 import com.yupi.project.model.dto.interfaceinfo.InterfaceInfoAddRequest;
+import com.yupi.project.model.dto.interfaceinfo.InterfaceInfoInvokeRequest;
 import com.yupi.project.model.dto.interfaceinfo.InterfaceInfoQueryRequest;
 import com.yupi.project.model.dto.interfaceinfo.InterfaceInfoUpdateRequest;
 import com.yupi.project.model.entity.InterfaceInfo;
@@ -288,6 +291,65 @@ public class InterfaceInfoController {
 
         return ResultUtils.success(isSuccess);
     }
+
+
+    /**
+     * 测试调用接口
+     *
+     * */
+    @PostMapping("/invoke")
+    public BaseResponse<Object> TestInvokeInterfaceInfo(
+            @RequestBody InterfaceInfoInvokeRequest interfaceInfoInvokeRequest,
+                                                     HttpServletRequest request) {
+
+        //1.校验参数 是否为空  为空抛出异常
+        Long id = interfaceInfoInvokeRequest.getId();
+        if(id == null || id <= 0){
+            //参数错误
+            throw new BusinessException(ErrorCode.PARAMS_ERROR);
+
+        }
+        //2.获取前端传来的RequestParams
+        String requestParams = interfaceInfoInvokeRequest.getRequestParams();
+        if(requestParams == null || "".equals(requestParams)){
+            //参数错误
+            throw new BusinessException(ErrorCode.PARAMS_ERROR);
+        }
+        //3.判断状态是否在运行
+        InterfaceInfo oldinterfaceinfo = InterfaceInfoService.getById(id);
+
+        //4.判断接口状态
+        Integer status = oldinterfaceinfo.getStatus();
+        if (status == 0){
+            //报错 系统错误
+            throw new BusinessException(ErrorCode.SYSTEM_ERROR,"接口已关闭");
+        }
+
+        //需要获取用户的ak和sk
+
+        //先获取登录用户的信息
+        User loginUser = userService.getLoginUser(request);
+
+        String secretKey = loginUser.getSecretKey();
+        String accessKey = loginUser.getAccessKey();
+
+
+
+        //5.将请求参数json转为Bean对象
+        Gson gson = new Gson();
+        com.sdk.modal.User user = gson.fromJson(requestParams,
+                com.sdk.modal.User.class);
+
+        //需要使用当前的用户的ak/sk调用后台接口   所以需要将重新创建一个client
+        JunClient junClient = new JunClient(accessKey,secretKey);
+
+        //调用函数 返回结果
+        String res = junClient.GetNameByPostAndBody(user);
+
+
+        return ResultUtils.success(res);
+    }
+
 
 
 
