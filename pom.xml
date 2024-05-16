@@ -25,6 +25,28 @@
             <version>1.0</version>
         </dependency>
 
+<!--        引入公共的模块-->
+
+        <dependency>
+            <groupId>com.jun</groupId>
+            <artifactId>junapi-common</artifactId>
+            <version>1.0</version>
+        </dependency>
+
+
+        <!--引入dubbo和nacos 依赖-->
+        <dependency>
+            <groupId>org.apache.dubbo</groupId>
+            <artifactId>dubbo</artifactId>
+            <version>3.0.9</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.alibaba.nacos</groupId>
+            <artifactId>nacos-client</artifactId>
+            <version>2.1.0</version>
+        </dependency>
+
 
         <dependency>
             <groupId>org.springframework.boot</groupId>
