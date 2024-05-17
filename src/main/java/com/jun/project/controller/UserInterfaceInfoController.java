@@ -36,7 +36,7 @@ import java.util.List;
 
 
 /**
- * 帖子接口
+ * 用户接口信息接口
  *
  * @author yupi
  */

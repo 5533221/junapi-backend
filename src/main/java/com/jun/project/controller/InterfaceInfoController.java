@@ -242,7 +242,15 @@ public class InterfaceInfoController {
         //3.判断是否可以调用  接口
         com.sdk.modal.User user = new com.sdk.modal.User();
         user.setUserName("测试用户！！！");
-        String res = client.GetNameByPostAndBody(user);
+
+        String res = null;
+        try {
+            res = client.GetNameByPostAndBody(user);
+        } catch (Exception e) {
+
+            throw new BusinessException(ErrorCode.SYSTEM_ERROR,"接口错误,暂不能使用！！");
+        }
+
         if(res.isEmpty()){
 
             throw new BusinessException(ErrorCode.SYSTEM_ERROR,"接口错误,暂不能使用！！");

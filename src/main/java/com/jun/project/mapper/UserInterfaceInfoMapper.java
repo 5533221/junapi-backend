@@ -2,7 +2,11 @@ package com.jun.project.mapper;
 
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.jun.project.common.BaseResponse;
+import com.jun.project.model.vo.InterfaceVO;
 import com.junapicommon.model.entity.UserInterfaceInfo;
+
+import java.util.List;
 
 /**
 * @author 27164
@@ -11,6 +15,10 @@ import com.junapicommon.model.entity.UserInterfaceInfo;
 * @Entity generator.domain.UserInterfaceInfo
 */
 public interface UserInterfaceInfoMapper extends BaseMapper<UserInterfaceInfo> {
+
+    //分析功能  统计接口的调用次数
+
+    List<UserInterfaceInfo> anysisInvokeInterfaceTop(int limit);
 
 }
 

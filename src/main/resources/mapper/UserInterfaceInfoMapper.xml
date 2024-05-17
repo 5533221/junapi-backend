@@ -21,4 +21,15 @@
         totalNum,leftNum,status,
         createTime,updateTime,isDelete
     </sql>
+    <select id="anysisInvokeInterfaceTop" resultType="com.junapicommon.model.entity.UserInterfaceInfo">
+
+        SELECT interfaceInfoId, SUM(totalNum) as totalNum
+        from user_interface_info
+        GROUP BY interfaceInfoId
+        ORDER BY  totalNum desc
+        LIMIT #{limit}
+
+
+    </select>
+
 </mapper>
